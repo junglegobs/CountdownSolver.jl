@@ -39,4 +39,8 @@ julia> using Revise
 
 julia> using CountdownSolver
 [ Info: Precompiling CountdownSolver [7e945158-e9db-46ef-8867-8dbbec1b05b8]
+
+(@v1.5) pkg> activate CountdownSolver
+ Activating environment at `~/Desktop/Julia_Dev/CountdownSolver/Project.toml`
 ```
+The package is now located at `joinpath(ENV["HOME"], "Desktop", "Julia_Dev")`. Any exported functions from the module `CountdownSolver` are now accessible, and the `Revise.jl` package ensures that any changes are automatically taken into account. By activating `CountdownSolver`, any packages will be added to the `CountdownSolver.jl` package (and not your main environment).
