@@ -2,9 +2,28 @@
 
 Solves the [countdown problem](https://www.youtube.com/watch?v=2wyj7Ja2CPU&t=1m55s). 
 
-As a first attempt, just try all possible combinations (Monte Carlo).
 
-As a second attempt, formulate as an optimisation problem, probably by defining auxiliary variables somehow?
+## Problem description
+
+Given a set `S` of natural numbers, combine these using `+`, `-`, `/`, `*` and `()` to get a desired result `r`. The brackets are required to distinguish between otherwise identitical combinations, e.g.:
+```math
+(2 \times 25) + (3 \times 4) \neq 2 \times (25 + 3) \times 4
+```
+
+Some useful resources on the topic:
+* [Writing an algorithm to decide whether a target number can be reached with a set](https://stackoverflow.com/questions/16564543/writing-an-algorithm-to-decide-whether-a-target-number-can-be-reached-with-a-set)
+* [Writing an algorithm to decide whether a target number can be reached with a set of other numbers and specific operators?](https://stackoverflow.com/questions/16564543/writing-an-algorithm-to-decide-whether-a-target-number-can-be-reached-with-a-set)
+* [Solver written in C++](https://github.com/jes/cntdn/blob/master/cntdn.js#L148)
+
+It seems brute force is the only way of doing this, i.e. try as many combinations in 30 seconds and see which one is closest to the desired result. This algorithm could be desribed as follows:
+
+1. Set `A = [(,n) for n in S]` to be the set of available numbers and how they were obtained (order of operations).
+2. For `(a1,a1)` in `unique(product(A,A))`, combine `a1` and `a1` using `+`, `-`, `/`, `*` and `()`.
+3. If this combination is equal to `r`, then stop. Else, save this number and the associated operations with it in `A_new`.
+4. Set `A = union(A,A_new)`.
+5. Go back to step 2.
+
+The problem with this algorithm is that some impossible combinations are produced, e.g. if `S = [2,3,10,25]` then a possible combination (in terms of the algorithm) is `2 * 3 * 2`, even though 2 only appears once. I can get over this by saving the numbers used as well as the order of operation in the set `A`.
 
 # Develop
 
