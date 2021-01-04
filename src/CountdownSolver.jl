@@ -1,4 +1,4 @@
 module CountdownSolver
     include("util.jl")
-    include("NumbComb.jl")
+    include("NumberCombination.jl")
 end

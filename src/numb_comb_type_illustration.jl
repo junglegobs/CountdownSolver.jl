@@ -1,7 +1,8 @@
 include("CountdownSolver.jl")
-CountdownSolver.NumbComb
-n1 = CountdownSolver.NumbComb(2)
-n2 = CountdownSolver.NumbComb(3)
+CountdownSolver.NumberCombination
+n1 = CountdownSolver.NumberCombination(2)
+n2 = CountdownSolver.NumberCombination{Int64}(3)
+temp = CountdownSolver.NumberCombination{Int8}(3)
 
 n3 = n1 + n2
 n4 = n1 * n2
@@ -24,8 +25,8 @@ catch e
 end
 
 # This will
-n8 = CountdownSolver.NumbComb(10)
-n9 = CountdownSolver.NumbComb(2)
+n8 = CountdownSolver.NumberCombination(10)
+n9 = CountdownSolver.NumberCombination(2)
 n10 = n8 * n9
 n7 = n6 + n10
 

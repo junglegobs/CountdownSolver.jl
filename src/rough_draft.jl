@@ -1,13 +1,18 @@
 using Pkg
 Pkg.activate(joinpath(@__DIR__, ".."))
 using BenchmarkTools
+include("CountdownSolver.jl")
 
 # Setup
 operators = (+,-,/,*)
 numbers = convert.(Int8, rand([2:10..., 25, 50, 75], 6))
 target = rand(1:1000)
 
-A = 
+A = [CountdownSolver.NumberComb(i) for i in numbers]
+
+# Now some function which loops over all the possibilities, 
+# possibly while increasing the set A?
+
 
 # function try_combination(n1::NumbComb, n2::NumbComb, op)
 
