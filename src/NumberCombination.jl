@@ -22,12 +22,21 @@ mutable struct NumberCombination{T <: Number}
         @assert is_valid_number_combination(n) "You can't use the same number twice!"
         return n
     end
+
+    function NumberCombination(val::Rational{T}, op, par) where T <: Number
+        n = new{T}();
+        n.val = val;
+        n.val = val; n.operators = op; n.parents = par;
+        @assert is_valid_number_combination(n) "You can't use the same number twice!"
+        return n
+    end
 end
 
 NumberCombination(val) = (n = NumberCombination(val, Function[], NumberCombination[]))
 NumberCombination{T}(val) where T <: Number = (
     n = NumberCombination(convert(T,val), Function[], NumberCombination[])
 )
+
 
 Base.:+(n1::NumberCombination, n2::NumberCombination) = NumberCombination(n1.val + n2.val, Function[+], [n1,n2])
 Base.:-(n1::NumberCombination, n2::NumberCombination) = NumberCombination(n1.val - n2.val, Function[-], [n1,n2])

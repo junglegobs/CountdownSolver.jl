@@ -4,35 +4,45 @@ using BenchmarkTools
 include("CountdownSolver.jl")
 
 # Setup
+IntType = Int32
 operators = (+,-,/,*)
-numbers = convert.(Int8, rand([2:10..., 25, 50, 75], 6))
+numbers = convert.(IntType, rand([2:10..., 25, 50, 75], 6))
 target = rand(1:1000)
 
-A = [CountdownSolver.NumberComb(i) for i in numbers]
+A = [CountdownSolver.NumberCombination(i) for i in numbers]
+
+print(
+"""
+The target number is: $target
+Allowed operators are: $operators
+Given numbers are: $numbers
+"""
+)
 
 # Now some function which loops over all the possibilities, 
-# possibly while increasing the set A?
+# possibly while increasing the set A
+best_match = CountdownSolver.NumberCombination(IntType(target*10))
+t = tic()
+for i in 2:length(numbers)
+    A_new = CountdownSolver.NumberCombination{IntType}[]
+    for n1 in A, n2 in A, op in operators
+        if length(CountdownSolver.get_common_parents(n1, n2)) == 0
+            n_new = op(n1, n2)
+            push!(A_new, n_new)
+            if abs(target - n_new.val) < abs(target - best_match.val)
+                print(
+                """
+                Current best match is:
+                $n_new
 
-
-# function try_combination(n1::NumbComb, n2::NumbComb, op)
-
-# end
-
-
-# @benchmark rand(operators)(
-#     rand(operators)(
-#         rand(numbers), rand(numbers)
-#     ),
-#     rand(numbers)
-# )
-
-# # Quick calcs
-# eval_time = 10^-6 # seconds
-# total_time = 60 # seconds
-# @show total_possible_evaluations = total_time / eval_time
-# n_op = length(operators)
-# n_num = length(numbers)
-# @show total_possible_combos = n_op^(n_num) * factorial(n_num)
-# @show ratio = total_possible_evaluations / total_possible_combos
-
-# So can easily go through every possible combination!!!
+                """
+                )
+                best_match = n_new
+            end
+            if best_match.val ≈ target
+                break
+            end 
+        end
+    end
+    append!(A, A_new)
+end
