@@ -24,22 +24,26 @@ function solve_countdown_number_problem(target::Number, numbers;
             isopen(timer) || return best_match
             yield()
             if length(CountdownSolver.get_common_parents(n1, n2)) == 0
-                n_new = op(n1, n2)
-                push!(A_new, n_new)
-                if abs(target - n_new.val) < abs(target - best_match.val)
-                    print(
-                    """
-                    Current best match is:
-                    $n_new
-    
-                    """
-                    )
-                    best_match = n_new
+                try
+                    n_new = op(n1, n2)
+                    push!(A_new, n_new)
+                    if abs(target - n_new.val) < abs(target - best_match.val)
+                        print(
+                        """
+                        Current best match is:
+                        $n_new
+        
+                        """
+                        )
+                        best_match = n_new
+                    end
+                    if best_match.val ≈ target
+                        println("Found exact match, exiting.")
+                        return best_match
+                    end
+                catch e
+                    @debug e
                 end
-                if best_match.val ≈ target
-                    println("Found exact match, exiting.")
-                    return best_match
-                end 
             end
         end
         append!(A, A_new)

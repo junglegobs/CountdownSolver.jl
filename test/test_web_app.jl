@@ -1,8 +1,8 @@
 include(joinpath(@__DIR__, "..", "src", "CountdownSolver.jl"))
 # include(joinpath(@__DIR__, "..", "src", "build_web_app.jl"))
 
-route("/", ui)
-ui()
+route("/", CountdownSolver.ui)
+CountdownSolver.ui()
 up(8000, open_browser=true)
 
 # I think this link is more useful:

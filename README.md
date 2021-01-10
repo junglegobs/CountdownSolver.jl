@@ -7,7 +7,7 @@ Solves the [countdown problem](https://www.youtube.com/watch?v=2wyj7Ja2CPU&t=1m5
 
 Given a set `S` of natural numbers, combine these using `+`, `-`, `/`, `*` and `()` to get a desired result `r`. The brackets are required to distinguish between otherwise identitical combinations, e.g.:
 ```math
-(2 \times 25) + (3 \times 4) \neq 2 \times (25 + 3) \times 4
+2 * 25 + 3 * 4 =/= 2 * (25 + 3) * 4
 ```
 
 Some useful resources on the topic:
@@ -27,39 +27,16 @@ The problem with this algorithm is that some impossible combinations are produce
 
 # Develop
 
-In Julia:
+Just do `include(<path_to_CountdownSolver.jl>)` before running a script or a test. Similarly for the functions to build the web UI.
+
+Alternatively:
 
 ```julia
 julia> ENV["JULIA_PKG_DEVDIR"] = joinpath(ENV["HOME"], "Desktop", "Julia_Dev")
-"/home/u0128861/Desktop/Julia_Dev"
-
 (@v1.5) pkg> add git@github.com:junglegobs/CountdownSolver.jl.git
-    Cloning git-repo `git@github.com:junglegobs/CountdownSolver.jl.git`
-   Updating git-repo `git@github.com:junglegobs/CountdownSolver.jl.git`
-   Updating registry at `~/.julia/registries/General`
-   Updating git-repo `https://github.com/JuliaRegistries/General.git`
-   Updating registry at `~/.julia/registries/SpineRegistry`
-   Updating git-repo `https://github.com/Spine-project/SpineJuliaRegistry.git`
-  Resolving package versions...
-Updating `~/.julia/environments/v1.5/Project.toml`
-  [7e945158] + CountdownSolver v0.1.0 `git@github.com:junglegobs/CountdownSolver.jl.git#main`
-Updating `~/.julia/environments/v1.5/Manifest.toml`
-  [7e945158] + CountdownSolver v0.1.0 `git@github.com:junglegobs/CountdownSolver.jl.git#main`
-
-(@v1.5) pkg> dev CountdownSolver
-    Cloning git-repo `git@github.com:junglegobs/CountdownSolver.jl.git`
-  Resolving package versions...
-Updating `~/.julia/environments/v1.5/Project.toml`
-  [7e945158] ~ CountdownSolver v0.1.0 `git@github.com:junglegobs/CountdownSolver.jl.git#main` ⇒ v0.1.0 `~/Desktop/Julia_Dev/CountdownSolver`
-Updating `~/.julia/environments/v1.5/Manifest.toml`
-  [7e945158] ~ CountdownSolver v0.1.0 `git@github.com:junglegobs/CountdownSolver.jl.git#main` ⇒ v0.1.0 `~/Desktop/Julia_Dev/CountdownSolver`
-
+(@v1.5) pkg> dev CountdownSolver # Will copy files to Desktop/Julia_Dev
 julia> using Revise
-
-julia> using CountdownSolver
-[ Info: Precompiling CountdownSolver [7e945158-e9db-46ef-8867-8dbbec1b05b8]
-
 (@v1.5) pkg> activate CountdownSolver
- Activating environment at `~/Desktop/Julia_Dev/CountdownSolver/Project.toml`
+julia> using CountdownSolver
 ```
 The package is now located at `joinpath(ENV["HOME"], "Desktop", "Julia_Dev")`. Any exported functions from the module `CountdownSolver` are now accessible, and the `Revise.jl` package ensures that any changes are automatically taken into account. By activating `CountdownSolver`, any packages will be added to the `CountdownSolver.jl` package (and not your main environment).
