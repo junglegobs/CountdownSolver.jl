@@ -2,32 +2,38 @@ using Genie, Genie.Router, Genie.Renderer.Html, Stipple, StippleUI
 
 Base.@kwdef mutable struct StippleModel <: ReactiveModel
     process::R{Bool} = false
-    output::R{NumberCombination} = NumberCombination(0)
+    output::R{String} = ""
     numbers::R{Vector{Int64}} = [2,3,8,25,25,50]
     target::Int64 = 0
 end
 
 web_app = Stipple.init(StippleModel())
 
-on(web_app.process) do _
-    if (web_app.process[])
-        web_app.output[] = solve_countdown_number_problem(web_app.input[])
+on(web_app.process) do _ # This creates a function which "listens" to web_app.process
+    if (web_app.process[]) # Do this function if process = true
+        web_app.output[] = "Computing..."
+        @info "Computing..."
+        answer = NumberCombination(web_app.numbers[][1])
+        io = IOBuffer(); print(io, answer) # Print answer to IO buffer
+        web_app.output[] = String(take!(io)) # Set this in output
+        web_app.output[] = "Boom" #
         web_app.process[] = false
     end
 end
 
 function ui()
-    page(
-        root(web_app), class="container", [
-            
+    [
+    dashboard(
+        vm(web_app), class="container", title="Countdown Solver", [
+        h1("Countdown Solver")
         p([
             "Target: "
-            input(Int[], @data(:input), @on("keyup.enter", "process = true"))
+            input(0, @bind(:target))
         ])
 
         p([
             "Number: "
-            input(Int[], @data(:input), @on("keyup.enter", "process = true"))
+            input([1,2,3,4,5,6], @bind(:numbers))
         ])
 
         p([
@@ -43,5 +49,15 @@ function ui()
             span("", @text(:output))
         ])
         ]
-    ) |> html
+    )
+    ]
+end
+
+route("/") do
+    CountdownSolver.ui() |> html
+end
+up(8000, open_browser=true)
+
+function return_web_app()
+    return web_app
 end
