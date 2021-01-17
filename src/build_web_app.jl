@@ -1,63 +1,69 @@
-using Genie, Genie.Router, Genie.Renderer.Html, Stipple, StippleUI
+using Stipple
+using CountdownSolver
 
-Base.@kwdef mutable struct StippleModel <: ReactiveModel
+Base.@kwdef mutable struct WebModel <: ReactiveModel
     process::R{Bool} = false
-    output::R{String} = ""
-    numbers::R{Vector{Int64}} = [2,3,8,25,25,50]
-    target::Int64 = 0
+    answer::R{String} = "1000"
+    numbers::R{String} = "1,2,3,4,25,50"
+    target::R{String} = "1000"
+    error::R{String} = "No errors, great!"
+    timeout::R{String} = "30"
 end
 
-web_app = Stipple.init(StippleModel())
+rt_model = Stipple.init(WebModel())
 
-on(web_app.process) do _ # This creates a function which "listens" to web_app.process
-    if (web_app.process[]) # Do this function if process = true
-        web_app.output[] = "Computing..."
-        @info "Computing..."
-        answer = NumberCombination(web_app.numbers[][1])
-        io = IOBuffer(); print(io, answer) # Print answer to IO buffer
-        web_app.output[] = String(take!(io)) # Set this in output
-        web_app.output[] = "Boom" #
-        web_app.process[] = false
+on(rt_model.process) do _
+    if (rt_model.process[])
+        try
+            in_str = rt_model.numbers[]
+            split_str = split(in_str, r"[,;:]")
+            timeout = parse(Int, rt_model.timeout[])
+            numbers = [parse(Int, s) for s in split_str if isempty(s) == false]
+            target = parse(Int, rt_model.target[])
+            rt_model.answer[] = "Computing..."
+            best_guess = CountdownSolver.solve_countdown_number_problem(target, numbers)
+            rt_model.answer[] = string(best_guess)
+            rt_model.error[] = "No errors, great!"
+        catch e
+            rt_model.error[] = string(e)
+        end
+        rt_model.process[] = false
     end
 end
 
 function ui()
     [
-    dashboard(
-        vm(web_app), class="container", title="Countdown Solver", [
-        h1("Countdown Solver")
-        p([
-            "Target: "
-            input(0, @bind(:target))
-        ])
-
-        p([
-            "Number: "
-            input([1,2,3,4,5,6], @bind(:numbers))
-        ])
-
-        p([
-            "Enter the allowed numbers seperated by a comma in the box above."
-        ])
-
-        p([
-            button("Solve countdown problem!", @click("process = true"))
-        ])
-
-        p([
-            "Output: "
-            span("", @text(:output))
-        ])
-        ]
-    )
-    ]
+        page(
+            vm(rt_model), class="container", title="Countdown solver", [
+                h2(["Countdown solver"])
+                p([
+                    "Target: "
+                    input("", @bind(:target), @on("keyup.enter", "process = true"))
+                ])
+                p([
+                    "Numbers (seperated by a comma): "
+                    input("", @bind(:numbers), @on("keyup.enter", "process = true"))
+                ])
+                p([
+                    "Time out (seconds): "
+                    input("", @bind(:timeout), @on("keyup.enter", "process = true"))
+                ])
+                p(
+                    button("Solve!", @click("process = true"))
+                )
+                p([
+                    "Output: "
+                    span("", @text(:answer))
+                ])
+                p([
+                    "Errors: "
+                    span("", @text(:error))
+                ])
+            ]
+        )
+    ] |> html
 end
 
-route("/") do
-    CountdownSolver.ui() |> html
-end
-up(8000, open_browser=true)
+route("/", ui)
 
-function return_web_app()
-    return web_app
-end
+up(rand((8000:9000)), open_browser=true)
