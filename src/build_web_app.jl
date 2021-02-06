@@ -65,5 +65,4 @@ function ui()
 end
 
 route("/", ui)
-
-up(rand((8000)), open_browser=true)
+up(8000, open_browser=true)
