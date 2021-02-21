@@ -65,4 +65,4 @@ function ui()
 end
 
 route("/", ui)
-up(9000, open_browser=true)
+up(9000)
