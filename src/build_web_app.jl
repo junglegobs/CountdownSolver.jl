@@ -1,5 +1,4 @@
-using Stipple
-using CountdownSolver
+using Stipple, Genie, CountdownSolver
 
 Base.@kwdef mutable struct WebModel <: ReactiveModel
     process::R{Bool} = false
@@ -10,7 +9,7 @@ Base.@kwdef mutable struct WebModel <: ReactiveModel
     timeout::R{String} = "30"
 end
 
-rt_model = Stipple.init(WebModel())
+rt_model = Stipple.init(WebModel(); transport = Genie.WebThreads)
 
 on(rt_model.process) do _
     if (rt_model.process[])
@@ -21,7 +20,9 @@ on(rt_model.process) do _
             numbers = [parse(Int, s) for s in split_str if isempty(s) == false]
             target = parse(Int, rt_model.target[])
             rt_model.answer[] = "Computing..."
-            best_guess = CountdownSolver.solve_countdown_number_problem(target, numbers)
+            best_guess = CountdownSolver.solve_countdown_number_problem(
+                target, numbers
+            )
             rt_model.answer[] = string(best_guess)
             rt_model.error[] = "No errors, great!"
         catch e

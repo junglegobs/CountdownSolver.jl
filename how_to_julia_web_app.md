@@ -25,13 +25,15 @@ julia --project=@. # starts julia and sets project to repository directory
 Within julia
 ```julia
 ] instantiate
-include("src/buil_web_app.jl")
+include("src/build_web_app.jl")
 ```
 This should produce output:
 ```julia
 Web Server running at http://127.0.0.1:9000
 ```
-You should be able to check in your browser that this is the case (I think you may have had to `ssh` with the `-X` option).
+If you're running this locally, you should be able to check in your browser that this is the case. There might also be a way of doing this if you're `ssh`'d into your server (googling "port forwarding" may be useful).
+
+In `build_web_app.jl`, the initiation of the Stipple model is done with the keyword argument `transport = Genie.WebThreads`. This is quite important for reasons relating to web sockets (see [here](https://discourse.julialang.org/t/hello-ive-built-a-web-app-using-genie-stipple-and-i-would-like-to-deploy-it-to/54459/15)).
 
 Leave screen using `Ctrl + A + d`. You can get back to it using `screen -dr`.
 
