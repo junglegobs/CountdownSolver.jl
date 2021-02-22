@@ -31,7 +31,7 @@ This should produce output:
 ```julia
 Web Server running at http://127.0.0.1:9000
 ```
-If you're running this locally, you should be able to check in your browser that this is the case. There might also be a way of doing this if you're `ssh`'d into your server (googling "port forwarding" may be useful).
+If you run the above on your local computer (not your server), you should be able to check in your browser that this is the case. There might also be a way of doing this if you're `ssh`'d into your server (googling "port forwarding" may be useful).
 
 In `build_web_app.jl`, the initiation of the Stipple model is done with the keyword argument `transport = Genie.WebThreads`. This is quite important for reasons relating to web sockets (see [here](https://discourse.julialang.org/t/hello-ive-built-a-web-app-using-genie-stipple-and-i-would-like-to-deploy-it-to/54459/15)).
 
